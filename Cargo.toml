@@ -1,0 +1,33 @@
+[package]
+name = "drone-nrf91-uart-log"
+version = "0.12.0"
+authors = ["Valentine Valyaeff <valentine.valyaeff@gmail.com>"]
+edition = "2018"
+repository = "https://github.com/drone-os/drone-nrf91-uart-log"
+homepage = "https://www.drone-os.com/"
+documentation = "https://api.drone-os.com/drone-nrf91-uart-log/0.12/drone_nrf91_uart_log/"
+readme = "README.md"
+license = "MIT OR Apache-2.0"
+description = """
+Nordic Semi nRF91 UART logger for Drone, an Embedded Operating System.
+"""
+
+[badges]
+maintenance = { status = "actively-developed" }
+
+[features]
+default = []
+std = ["drone-core/std", "drone-cortex-m/std", "drone-nrf-map/std"]
+
+[dependencies.drone-core]
+version = "0.12.0"
+path = "../drone-core"
+
+[dependencies.drone-cortex-m]
+version = "0.12.0"
+path = "../drone-cortex-m"
+
+[dependencies.drone-nrf-map]
+version = "0.12.0"
+path = "../drone-nrf-map"
+features = ["uarte"]
