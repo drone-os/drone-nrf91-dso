@@ -1,15 +1,15 @@
 [package]
-name = "drone-nrf91-uart-log"
+name = "drone-nrf91-dso"
 version = "0.12.0"
 authors = ["Valentine Valyaeff <valentine.valyaeff@gmail.com>"]
 edition = "2018"
-repository = "https://github.com/drone-os/drone-nrf91-uart-log"
+repository = "https://github.com/drone-os/drone-nrf91-dso"
 homepage = "https://www.drone-os.com/"
-documentation = "https://api.drone-os.com/drone-nrf91-uart-log/0.12/drone_nrf91_uart_log/"
+documentation = "https://api.drone-os.com/drone-nrf91-dso/0.12/drone_nrf91_dso/"
 readme = "README.md"
 license = "MIT OR Apache-2.0"
 description = """
-Nordic Semi nRF91 UART logger for Drone, an Embedded Operating System.
+Nordic Semi nRF91 DSO implementation for Drone, an Embedded Operating System.
 """
 
 [badges]

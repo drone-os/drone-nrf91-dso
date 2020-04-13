@@ -49,7 +49,7 @@
 macro_rules! set_log {
     (periph: $uarte:ident,pin_number: $pin_number:expr,buf_size: $buf_size:expr,) => {
         const _: () = {
-            use ::core::{mem::MaybeUninit, slice, sync::atomic::AtomicBool};
+            use ::core::{mem::MaybeUninit, slice, sync::atomic::AtomicU8};
             use ::drone_core::log;
             use ::drone_cortex_m::reg;
             use ::drone_nrf_map::periph::uarte::{$uarte, UartePeriph};
@@ -58,14 +58,14 @@ macro_rules! set_log {
             $crate::reg_assert_taken!($uarte);
 
             static mut BUF: [u8; $buf_size] = [0; $buf_size];
-            static IS_INIT: AtomicBool = AtomicBool::new(false);
+            static STATE: AtomicU8 = AtomicU8::new(0);
 
             struct Logger;
 
             unsafe impl UartLogger for Logger {
                 type UarteMap = $uarte;
 
-                const BAUD_RATE: u32 = $crate::convert_baud_rate(log::baud_rate!());
+                const BAUD_RATE: u32 = $crate::uarte_baud_rate(log::baud_rate!());
                 const BUF_SIZE: u32 = $buf_size;
                 const PIN_NUMBER: u32 = $pin_number;
 
@@ -75,8 +75,8 @@ macro_rules! set_log {
                 }
 
                 #[inline]
-                fn is_init() -> &'static AtomicBool {
-                    &IS_INIT
+                fn state() -> &'static AtomicU8 {
+                    &STATE
                 }
 
                 #[inline]

@@ -36,7 +36,7 @@ readme:
 
 # Bump crate versions
 version-bump version drone-core-version drone-cortex-m-version drone-nrf-map-version:
-	sed -i "s/\(api\.drone-os\.com\/drone-nrf91-uart-log\/\)[0-9]\+\(\.[0-9]\+\)\+/\1$(echo {{version}} | sed 's/\(.*\)\.[0-9]\+/\1/')/" \
+	sed -i "s/\(api\.drone-os\.com\/drone-nrf91-dso\/\)[0-9]\+\(\.[0-9]\+\)\+/\1$(echo {{version}} | sed 's/\(.*\)\.[0-9]\+/\1/')/" \
 		Cargo.toml src/lib.rs
 	sed -i '/\[.*\]/h;/version = ".*"/{x;s/\[package\]/version = "{{version}}"/;t;x}' \
 		Cargo.toml
@@ -46,7 +46,7 @@ version-bump version drone-core-version drone-cortex-m-version drone-nrf-map-ver
 		Cargo.toml
 	sed -i '/\[.*\]/h;/version = ".*"/{x;s/\[.*drone-nrf-map\]/version = "{{drone-nrf-map-version}}"/;t;x}' \
 		Cargo.toml
-	sed -i 's/\(drone-nrf91-uart-log.*\)version = "[^"]\+"/\1version = "{{version}}"/' \
+	sed -i 's/\(drone-nrf91-dso.*\) = "[^"]\+"/\1 = "{{version}}"/' \
 		src/lib.rs
 
 # Publish to crates.io
@@ -59,5 +59,5 @@ publish-doc: doc
 		&& rm -rf ../drone-api/$dir \
 		&& cp -rT target/doc ../drone-api/$dir \
 		&& cp -rT target/{{target}}/doc ../drone-api/$dir \
-		&& echo '<!DOCTYPE html><meta http-equiv="refresh" content="0; URL=./drone_nrf91_uart_log">' > ../drone-api/$dir/index.html \
+		&& echo '<!DOCTYPE html><meta http-equiv="refresh" content="0; URL=./drone_nrf91_dso">' > ../drone-api/$dir/index.html \
 		&& cd ../drone-api && git add $dir && git commit -m "Docs for $dir"

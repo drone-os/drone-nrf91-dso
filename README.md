@@ -1,14 +1,14 @@
-[![crates.io](https://img.shields.io/crates/v/drone-nrf91-uart-log.svg)](https://crates.io/crates/drone-nrf91-uart-log)
+[![crates.io](https://img.shields.io/crates/v/drone-nrf91-dso.svg)](https://crates.io/crates/drone-nrf91-dso)
 ![maintenance](https://img.shields.io/badge/maintenance-actively--developed-brightgreen.svg)
 
-# drone-nrf91-uart-log
+# drone-nrf91-dso
 
-Nordic Semi nRF91 UART logger for Drone, an Embedded Operating System.
+Nordic Semi nRF91 DSO implementation for Drone, an Embedded Operating System.
 
 ## Documentation
 
 - [Drone Book](https://book.drone-os.com/)
-- [API documentation](https://api.drone-os.com/drone-nrf91-uart-log/0.12/)
+- [API documentation](https://api.drone-os.com/drone-nrf91-dso/0.12/)
 
 ## Usage
 
@@ -16,7 +16,7 @@ Place the following to the Cargo.toml:
 
 ```toml
 [dependencies]
-drone-nrf91-uart-log = { version = "0.12.0", features = [...] }
+drone-nrf91-dso = "0.12.0"
 ```
 
 ## License

@@ -1,9 +1,9 @@
-//! Nordic Semi nRF91 UART logger for Drone, an Embedded Operating System.
+//! Nordic Semi nRF91 DSO implementation for Drone, an Embedded Operating System.
 //!
 //! # Documentation
 //!
 //! - [Drone Book](https://book.drone-os.com/)
-//! - [API documentation](https://api.drone-os.com/drone-nrf91-uart-log/0.12/)
+//! - [API documentation](https://api.drone-os.com/drone-nrf91-dso/0.12/)
 //!
 //! # Usage
 //!
@@ -11,7 +11,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! drone-nrf91-uart-log = { version = "0.12.0", features = [...] }
+//! drone-nrf91-dso = "0.12.0"
 //! ```
 
 #![feature(const_fn)]
@@ -29,7 +29,7 @@ mod set_log;
 
 #[doc(hidden)]
 #[must_use]
-pub const fn convert_baud_rate(baud_rate: u32) -> u32 {
+pub const fn uarte_baud_rate(baud_rate: u32) -> u32 {
     match baud_rate {
         1_200 => 0x0004_F000,
         2_400 => 0x0009_D000,
@@ -49,6 +49,6 @@ pub const fn convert_baud_rate(baud_rate: u32) -> u32 {
         460_800 => 0x0740_0000,
         921_600 => 0x0F00_0000,
         1_000_000 => 0x1000_0000,
-        _ => panic!("Unsupported UART baud rate"),
+        _ => panic!("Unsupported UARTE baud rate"),
     }
 }
