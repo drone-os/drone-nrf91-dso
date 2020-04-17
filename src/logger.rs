@@ -2,11 +2,15 @@
 
 use crate::{uarte::Periph, DSO_PORTS};
 use core::{
+    cmp::min,
     ptr,
     ptr::{read_volatile, NonNull},
 };
 use drone_cortex_m::reg::prelude::*;
 use drone_nrf_map::periph::uarte::{traits::*, UarteMap};
+
+const KEY: u16 = 0b100_1011;
+const MAX_PACKET_SIZE: usize = 16;
 
 #[doc(hidden)]
 pub unsafe trait Logger {
@@ -28,9 +32,9 @@ pub fn is_enabled<T: Logger>(port: u8) -> bool {
 
 #[doc(hidden)]
 #[inline]
-pub fn write_bytes<T: Logger>(_port: u8, bytes: &[u8]) {
-    for bytes in bytes.chunks(T::BUF_SIZE as usize) {
-        unsafe { write_buf::<T>(bytes) };
+pub fn write_bytes<T: Logger>(port: u8, bytes: &[u8]) {
+    for bytes in bytes.chunks(min(T::BUF_SIZE as usize - 2, MAX_PACKET_SIZE)) {
+        unsafe { write_packet::<T>(port, bytes) };
     }
 }
 
@@ -100,18 +104,18 @@ fn init<T: UarteMap>(periph: &mut Periph<T>, buf_ptr: *const u8, pin_number: u32
     });
 }
 
-unsafe fn write_buf<T: Logger>(bytes: &[u8]) {
+unsafe fn write_packet<T: Logger>(port: u8, bytes: &[u8]) {
     #[cfg(feature = "std")]
     return;
     asm!("cpsid i" :::: "volatile");
     let mut periph = Periph::<T::UarteMap>::summon();
     init(&mut periph, T::buf().as_ptr(), T::PIN_NUMBER, T::BAUD_RATE);
     flush::<T>();
-    ptr::copy_nonoverlapping(bytes.as_ptr(), T::buf().as_ptr(), bytes.len());
+    let count = fill_buf(T::buf().as_ptr(), port, bytes);
     periph.uarte_txd_maxcnt.store_val({
         let mut val = periph.uarte_txd_maxcnt.default_val();
         // Maximum number of bytes in transmit buffer.
-        periph.uarte_txd_maxcnt.maxcnt().write(&mut val, bytes.len() as u32);
+        periph.uarte_txd_maxcnt.maxcnt().write(&mut val, count);
         val
     });
     periph.uarte_events_txstarted.store_val({
@@ -133,4 +137,11 @@ unsafe fn write_buf<T: Logger>(bytes: &[u8]) {
         val
     });
     asm!("cpsie i" :::: "volatile");
+}
+
+#[allow(clippy::cast_ptr_alignment)]
+unsafe fn fill_buf(buf_ptr: *mut u8, port: u8, bytes: &[u8]) -> u32 {
+    *(buf_ptr as *mut u16) = (KEY << 9 | u16::from(port) << 4 | (bytes.len() as u16 - 1)).to_be();
+    ptr::copy_nonoverlapping(bytes.as_ptr(), buf_ptr.add(2), bytes.len());
+    bytes.len() as u32 + 2
 }

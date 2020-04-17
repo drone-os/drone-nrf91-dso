@@ -3,16 +3,19 @@
 macro_rules! set_log {
     (periph: $uarte:ident,pin_number: $pin_number:expr,buf_size: $buf_size:expr,) => {
         const _: () = {
-            use ::core::{ptr::NonNull, slice};
+            use ::core::{cell::UnsafeCell, ptr::NonNull, slice};
             use ::drone_core::log;
             use ::drone_cortex_m::reg;
             use ::drone_nrf_map::periph::uarte::$uarte;
 
             $crate::uarte_assert_taken!($uarte);
 
-            static mut BUF: [u8; $buf_size] = [0; $buf_size];
-
             struct Logger;
+
+            #[repr(C, align(4))]
+            struct Buf(UnsafeCell<[u8; $buf_size]>);
+
+            static BUF: Buf = Buf(UnsafeCell::new([0; $buf_size]));
 
             unsafe impl $crate::Logger for Logger {
                 type UarteMap = $uarte;
@@ -23,9 +26,11 @@ macro_rules! set_log {
 
                 #[inline]
                 fn buf() -> NonNull<u8> {
-                    unsafe { NonNull::new_unchecked(BUF.as_mut_ptr()) }
+                    unsafe { NonNull::new_unchecked((&mut *BUF.0.get()).as_mut_ptr()) }
                 }
             }
+
+            unsafe impl Sync for Buf {}
 
             #[no_mangle]
             extern "C" fn drone_log_is_enabled(port: u8) -> bool {
