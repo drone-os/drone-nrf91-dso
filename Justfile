@@ -1,6 +1,6 @@
-cortex_m_core := 'cortex_m33f_r0p2'
+cortexm_core := 'cortexm33f_r0p2'
 nrf_mcu := 'nrf9160'
-export DRONE_RUSTFLAGS := '--cfg cortex_m_core="' + cortex_m_core + '" ' + '--cfg nrf_mcu="' + nrf_mcu + '"'
+export DRONE_RUSTFLAGS := '--cfg cortexm_core="' + cortexm_core + '" ' + '--cfg nrf_mcu="' + nrf_mcu + '"'
 target := 'thumbv8m.main-none-eabihf'
 
 # Install dependencies
@@ -14,35 +14,35 @@ deps:
 fmt:
 	cargo fmt
 
-# Check for mistakes
+# Check the source code for mistakes
 lint:
 	drone env {{target}} -- cargo clippy
 
-# Generate the docs
+# Build the documentation
 doc:
 	drone env {{target}} -- cargo doc
 
-# Open the docs in a browser
+# Open the documentation in a browser
 doc-open: doc
 	drone env {{target}} -- cargo doc --open
 
 # Run the tests
 test:
-	drone env -- cargo test --features "std"
+	drone env -- cargo test --features std
 
 # Update README.md
 readme:
 	cargo readme -o README.md
 
-# Bump crate versions
-version-bump version drone-core-version drone-cortex-m-version drone-nrf-map-version:
+# Bump the versions
+version-bump version drone-core-version drone-cortexm-version drone-nrf-map-version:
 	sed -i "s/\(api\.drone-os\.com\/drone-nrf91-dso\/\)[0-9]\+\(\.[0-9]\+\)\+/\1$(echo {{version}} | sed 's/\(.*\)\.[0-9]\+/\1/')/" \
 		Cargo.toml src/lib.rs
 	sed -i '/\[.*\]/h;/version = ".*"/{x;s/\[package\]/version = "{{version}}"/;t;x}' \
 		Cargo.toml
 	sed -i '/\[.*\]/h;/version = ".*"/{x;s/\[.*drone-core\]/version = "{{drone-core-version}}"/;t;x}' \
 		Cargo.toml
-	sed -i '/\[.*\]/h;/version = ".*"/{x;s/\[.*drone-cortex-m\]/version = "{{drone-cortex-m-version}}"/;t;x}' \
+	sed -i '/\[.*\]/h;/version = ".*"/{x;s/\[.*drone-cortexm\]/version = "{{drone-cortexm-version}}"/;t;x}' \
 		Cargo.toml
 	sed -i '/\[.*\]/h;/version = ".*"/{x;s/\[.*drone-nrf-map\]/version = "{{drone-nrf-map-version}}"/;t;x}' \
 		Cargo.toml

@@ -5,7 +5,7 @@ macro_rules! set_log {
         const _: () = {
             use ::core::{cell::UnsafeCell, ptr::NonNull, slice};
             use ::drone_core::log;
-            use ::drone_cortex_m::reg;
+            use ::drone_cortexm::reg;
             use ::drone_nrf_map::periph::uarte::$uarte;
 
             $crate::uarte_assert_taken!($uarte);

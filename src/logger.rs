@@ -6,7 +6,7 @@ use core::{
     ptr,
     ptr::{read_volatile, NonNull},
 };
-use drone_cortex_m::reg::prelude::*;
+use drone_cortexm::reg::prelude::*;
 use drone_nrf_map::periph::uarte::{traits::*, UarteMap};
 
 const KEY: u16 = 0b100_1011;
@@ -107,7 +107,7 @@ fn init<T: UarteMap>(periph: &mut Periph<T>, buf_ptr: *const u8, pin_number: u32
 unsafe fn write_packet<T: Logger>(port: u8, bytes: &[u8]) {
     #[cfg(feature = "std")]
     return;
-    asm!("cpsid i" :::: "volatile");
+    llvm_asm!("cpsid i" :::: "volatile");
     let mut periph = Periph::<T::UarteMap>::summon();
     init(&mut periph, T::buf().as_ptr(), T::PIN_NUMBER, T::BAUD_RATE);
     flush::<T>();
@@ -136,7 +136,7 @@ unsafe fn write_packet<T: Logger>(port: u8, bytes: &[u8]) {
         periph.uarte_tasks_starttx.tasks_starttx().set(&mut val);
         val
     });
-    asm!("cpsie i" :::: "volatile");
+    llvm_asm!("cpsie i" :::: "volatile");
 }
 
 #[allow(clippy::cast_ptr_alignment)]

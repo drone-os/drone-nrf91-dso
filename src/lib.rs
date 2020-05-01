@@ -34,7 +34,7 @@
 //! # pools = []
 //! # [probe]
 //! # gdb-client-command = \"gdb-multiarch\"
-//! # [probe.dso]
+//! # [log.dso]
 //! # baud-rate = 115200
 //! # serial-endpoint = \"/dev/ttyACM0\"
 //! # " }
@@ -79,7 +79,7 @@
 //! # pools = []
 //! # [probe]
 //! # gdb-client-command = \"gdb-multiarch\"
-//! # [probe.dso]
+//! # [log.dso]
 //! # baud-rate = 115200
 //! # serial-endpoint = \"/dev/ttyACM0\"
 //! # " }
@@ -110,12 +110,11 @@
 //! }
 //! ```
 
-#![feature(asm)]
 #![feature(const_fn)]
 #![feature(const_if_match)]
 #![feature(const_panic)]
+#![feature(llvm_asm)]
 #![feature(prelude_import)]
-#![deny(elided_lifetimes_in_paths)]
 #![warn(missing_docs)]
 #![warn(clippy::pedantic)]
 #![allow(clippy::cast_possible_truncation, clippy::doc_markdown, clippy::wildcard_imports)]
