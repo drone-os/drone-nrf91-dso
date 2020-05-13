@@ -2,7 +2,7 @@ cargo-features = ["resolver"]
 
 [package]
 name = "drone-nrf91-dso"
-version = "0.12.0"
+version = "0.12.1"
 authors = ["Valentine Valyaeff <valentine.valyaeff@gmail.com>"]
 edition = "2018"
 resolver = "2"
@@ -23,11 +23,11 @@ default = []
 std = ["drone-core/std", "drone-cortexm/std", "drone-nrf-map/std"]
 
 [dependencies.drone-core]
-version = "0.12.0"
+version = "0.12.1"
 path = "../drone-core"
 
 [dependencies.drone-cortexm]
-version = "0.12.0"
+version = "0.12.1"
 path = "../drone-cortexm"
 
 [dependencies.drone-nrf-map]

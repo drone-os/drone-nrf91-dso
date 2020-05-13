@@ -17,7 +17,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! drone-nrf91-dso = "0.12.0"
+//! drone-nrf91-dso = "0.12.1"
 //! ```
 //!
 //! Exclude the following tokens from your register token index (change "uarte0"

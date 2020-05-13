@@ -58,49 +58,27 @@ fn init<T: UarteMap>(periph: &mut Periph<T>, buf_ptr: *const u8, pin_number: u32
     if is_init(periph) {
         return;
     }
-    periph.uarte_psel_txd.store_val({
-        let mut val = periph.uarte_psel_txd.default_val();
-        // Pin number.
-        periph.uarte_psel_txd.pin().write(&mut val, pin_number);
-        // Connect.
-        periph.uarte_psel_txd.connect().clear(&mut val);
-        val
+    periph.uarte_psel_txd.store_reg(|r, v| {
+        r.pin().write(v, pin_number); // pin number
+        r.connect().clear(v); // connect
     });
-    periph.uarte_psel_rxd.store_val({
-        let mut val = periph.uarte_psel_rxd.default_val();
-        // Disconnect.
-        periph.uarte_psel_rxd.connect().set(&mut val);
-        val
+    periph.uarte_psel_rxd.store_reg(|r, v| {
+        r.connect().set(v); // disconnect
     });
-    periph.uarte_psel_rts.store_val({
-        let mut val = periph.uarte_psel_rts.default_val();
-        // Disconnect.
-        periph.uarte_psel_rts.connect().set(&mut val);
-        val
+    periph.uarte_psel_rts.store_reg(|r, v| {
+        r.connect().set(v); // disconnect
     });
-    periph.uarte_psel_cts.store_val({
-        let mut val = periph.uarte_psel_cts.default_val();
-        // Disconnect.
-        periph.uarte_psel_cts.connect().set(&mut val);
-        val
+    periph.uarte_psel_cts.store_reg(|r, v| {
+        r.connect().set(v); // disconnect
     });
-    periph.uarte_txd_ptr.store_val({
-        let mut val = periph.uarte_txd_ptr.default_val();
-        // Data pointer.
-        periph.uarte_txd_ptr.ptr().write(&mut val, buf_ptr as u32);
-        val
+    periph.uarte_txd_ptr.store_reg(|r, v| {
+        r.ptr().write(v, buf_ptr as u32); // data pointer
     });
-    periph.uarte_baudrate.store_val({
-        let mut val = periph.uarte_baudrate.default_val();
-        // Baud rate.
-        periph.uarte_baudrate.baudrate().write(&mut val, baud_rate);
-        val
+    periph.uarte_baudrate.store_reg(|r, v| {
+        r.baudrate().write(v, baud_rate); // baud rate
     });
-    periph.uarte_enable.store_val({
-        let mut val = periph.uarte_enable.default_val();
-        // Enable UARTE.
-        periph.uarte_enable.enable().write(&mut val, 8);
-        val
+    periph.uarte_enable.store_reg(|r, v| {
+        r.enable().write(v, 8); // enable UARTE
     });
 }
 
@@ -112,29 +90,17 @@ unsafe fn write_packet<T: Logger>(port: u8, bytes: &[u8]) {
     init(&mut periph, T::buf().as_ptr(), T::PIN_NUMBER, T::BAUD_RATE);
     flush::<T>();
     let count = fill_buf(T::buf().as_ptr(), port, bytes);
-    periph.uarte_txd_maxcnt.store_val({
-        let mut val = periph.uarte_txd_maxcnt.default_val();
-        // Maximum number of bytes in transmit buffer.
-        periph.uarte_txd_maxcnt.maxcnt().write(&mut val, count);
-        val
+    periph.uarte_txd_maxcnt.store_reg(|r, v| {
+        r.maxcnt().write(v, count); // maximum number of bytes in transmit buffer
     });
-    periph.uarte_events_txstarted.store_val({
-        let mut val = periph.uarte_events_txstarted.default_val();
-        // UART transmitter has started.
-        periph.uarte_events_txstarted.events_txstarted().clear(&mut val);
-        val
+    periph.uarte_events_txstarted.store_reg(|r, v| {
+        r.events_txstarted().clear(v); // uart transmitter has started
     });
-    periph.uarte_events_endtx.store_val({
-        let mut val = periph.uarte_events_endtx.default_val();
-        // Last TX byte transmitted.
-        periph.uarte_events_endtx.events_endtx().clear(&mut val);
-        val
+    periph.uarte_events_endtx.store_reg(|r, v| {
+        r.events_endtx().clear(v); // last TX byte transmitted
     });
-    periph.uarte_tasks_starttx.store_val({
-        let mut val = periph.uarte_tasks_starttx.default_val();
-        // Start UART transmitter.
-        periph.uarte_tasks_starttx.tasks_starttx().set(&mut val);
-        val
+    periph.uarte_tasks_starttx.store_reg(|r, v| {
+        r.tasks_starttx().set(v); // start UART transmitter
     });
     llvm_asm!("cpsie i" :::: "volatile");
 }
