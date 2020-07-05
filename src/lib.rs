@@ -9,7 +9,7 @@
 //! # Documentation
 //!
 //! - [Drone Book](https://book.drone-os.com/)
-//! - [API documentation](https://api.drone-os.com/drone-nrf91-dso/0.12/)
+//! - [API documentation](https://api.drone-os.com/drone-nrf91-dso/0.13/)
 //!
 //! # Usage
 //!
@@ -17,7 +17,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! drone-nrf91-dso = "0.12.1"
+//! drone-nrf91-dso = "0.13.0"
 //! ```
 //!
 //! Exclude the following tokens from your register token index (change "uarte0"
@@ -111,7 +111,6 @@
 //! ```
 
 #![feature(const_fn)]
-#![feature(const_if_match)]
 #![feature(const_panic)]
 #![feature(llvm_asm)]
 #![feature(prelude_import)]
