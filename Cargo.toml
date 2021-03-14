@@ -1,14 +1,12 @@
-cargo-features = ["resolver"]
-
 [package]
 name = "drone-nrf91-dso"
-version = "0.13.0"
+version = "0.14.0"
 authors = ["Valentine Valyaeff <valentine.valyaeff@gmail.com>"]
 edition = "2018"
 resolver = "2"
 repository = "https://github.com/drone-os/drone-nrf91-dso"
 homepage = "https://www.drone-os.com/"
-documentation = "https://api.drone-os.com/drone-nrf91-dso/0.13/drone_nrf91_dso/"
+documentation = "https://api.drone-os.com/drone-nrf91-dso/0.14/drone_nrf91_dso/"
 readme = "README.md"
 license = "MIT OR Apache-2.0"
 description = """
@@ -23,14 +21,14 @@ default = []
 std = ["drone-core/std", "drone-cortexm/std", "drone-nrf-map/std"]
 
 [dependencies.drone-core]
-version = "0.13.0"
+version = "0.14.0"
 path = "../drone-core"
 
 [dependencies.drone-cortexm]
-version = "0.13.0"
+version = "0.14.0"
 path = "../drone-cortexm"
 
 [dependencies.drone-nrf-map]
-version = "0.13.0"
+version = "0.14.0"
 path = "../drone-nrf-map"
 features = ["uarte"]

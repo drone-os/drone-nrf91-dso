@@ -1,14 +1,12 @@
-cortexm_core := 'cortexm33f_r0p2'
-nrf_mcu := 'nrf9160'
-export DRONE_RUSTFLAGS := '--cfg cortexm_core="' + cortexm_core + '" ' + '--cfg nrf_mcu="' + nrf_mcu + '"'
-target := 'thumbv8m.main-none-eabihf'
+target := `drone print target 2>/dev/null || echo ""`
 
 # Install dependencies
 deps:
-	rustup target add {{target}}
+	type cargo-readme >/dev/null || cargo +stable install cargo-readme
+	type drone >/dev/null || cargo install drone
+	rustup target add $(drone print target)
 	rustup component add clippy
 	rustup component add rustfmt
-	type cargo-readme >/dev/null || cargo +stable install cargo-readme
 
 # Reformat the source code
 fmt:
@@ -16,19 +14,20 @@ fmt:
 
 # Check the source code for mistakes
 lint:
-	drone env {{target}} -- cargo clippy
+	cargo clippy
 
 # Build the documentation
 doc:
-	drone env {{target}} -- cargo doc
+	cargo doc
 
 # Open the documentation in a browser
 doc-open: doc
-	drone env {{target}} -- cargo doc --open
+	cargo doc --open
 
 # Run the tests
 test:
-	drone env -- cargo test --features std
+	cargo test --features std \
+		--target=$(rustc --version --verbose | sed -n '/host/{s/.*: //;p}')
 
 # Update README.md
 readme:
@@ -51,7 +50,7 @@ version-bump version drone-core-version drone-cortexm-version drone-nrf-map-vers
 
 # Publish to crates.io
 publish:
-	drone env {{target}} -- cargo publish
+	cargo publish
 
 # Publish the docs to api.drone-os.com
 publish-doc: doc

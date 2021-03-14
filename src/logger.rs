@@ -89,7 +89,7 @@ unsafe fn write_packet<T: Logger>(port: u8, bytes: &[u8]) {
     let mut periph = Periph::<T::UarteMap>::summon();
     init(&mut periph, T::buf().as_ptr(), T::PIN_NUMBER, T::BAUD_RATE);
     flush::<T>();
-    let count = fill_buf(T::buf().as_ptr(), port, bytes);
+    let count = unsafe { fill_buf(T::buf().as_ptr(), port, bytes) };
     periph.uarte_txd_maxcnt.store_reg(|r, v| {
         r.maxcnt().write(v, count); // maximum number of bytes in transmit buffer
     });
@@ -107,7 +107,10 @@ unsafe fn write_packet<T: Logger>(port: u8, bytes: &[u8]) {
 
 #[allow(clippy::cast_ptr_alignment)]
 unsafe fn fill_buf(buf_ptr: *mut u8, port: u8, bytes: &[u8]) -> u32 {
-    *(buf_ptr as *mut u16) = (KEY << 9 | u16::from(port) << 4 | (bytes.len() as u16 - 1)).to_be();
-    ptr::copy_nonoverlapping(bytes.as_ptr(), buf_ptr.add(2), bytes.len());
-    bytes.len() as u32 + 2
+    unsafe {
+        *buf_ptr.cast::<u16>() =
+            (KEY << 9 | u16::from(port) << 4 | (bytes.len() as u16 - 1)).to_be();
+        ptr::copy_nonoverlapping(bytes.as_ptr(), buf_ptr.add(2), bytes.len());
+        bytes.len() as u32 + 2
+    }
 }

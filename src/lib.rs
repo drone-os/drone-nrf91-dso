@@ -9,7 +9,7 @@
 //! # Documentation
 //!
 //! - [Drone Book](https://book.drone-os.com/)
-//! - [API documentation](https://api.drone-os.com/drone-nrf91-dso/0.13/)
+//! - [API documentation](https://api.drone-os.com/drone-nrf91-dso/0.14/)
 //!
 //! # Usage
 //!
@@ -17,7 +17,7 @@
 //!
 //! ```toml
 //! [dependencies]
-//! drone-nrf91-dso = "0.13.0"
+//! drone-nrf91-dso = "0.14.0"
 //! ```
 //!
 //! Exclude the following tokens from your register token index (change "uarte0"
@@ -29,9 +29,11 @@
 //! # [memory]
 //! # flash = { size = \"128K\", origin = 0x08000000 }
 //! # ram = { size = \"20K\", origin = 0x20000000 }
-//! # [heap]
+//! # [heap.main]
 //! # size = \"0\"
 //! # pools = []
+//! # [linker]
+//! # platform = \"arm\"
 //! # [probe]
 //! # gdb-client-command = \"gdb-multiarch\"
 //! # [log.dso]
@@ -41,23 +43,28 @@
 //! # fn main() {}
 //! # use drone_nrf_map::nrf_reg_tokens;
 //! nrf_reg_tokens! {
-//!     struct Regs;
-//!
-//!     !uarte0_ns_tasks_startrx; !uarte0_ns_tasks_stoprx; !uarte0_ns_tasks_starttx;
-//!     !uarte0_ns_tasks_stoptx; !uarte0_ns_tasks_flushrx; !uarte0_ns_subscribe_startrx;
-//!     !uarte0_ns_subscribe_stoprx; !uarte0_ns_subscribe_starttx; !uarte0_ns_subscribe_stoptx;
-//!     !uarte0_ns_subscribe_flushrx; !uarte0_ns_events_cts; !uarte0_ns_events_ncts;
-//!     !uarte0_ns_events_rxdrdy; !uarte0_ns_events_endrx; !uarte0_ns_events_txdrdy;
-//!     !uarte0_ns_events_endtx; !uarte0_ns_events_error; !uarte0_ns_events_rxto;
-//!     !uarte0_ns_events_rxstarted; !uarte0_ns_events_txstarted; !uarte0_ns_events_txstopped;
-//!     !uarte0_ns_publish_cts; !uarte0_ns_publish_ncts; !uarte0_ns_publish_rxdrdy;
-//!     !uarte0_ns_publish_endrx; !uarte0_ns_publish_txdrdy; !uarte0_ns_publish_endtx;
-//!     !uarte0_ns_publish_error; !uarte0_ns_publish_rxto; !uarte0_ns_publish_rxstarted;
-//!     !uarte0_ns_publish_txstarted; !uarte0_ns_publish_txstopped; !uarte0_ns_shorts; !uarte0_ns_inten;
-//!     !uarte0_ns_intenset; !uarte0_ns_intenclr; !uarte0_ns_errorsrc; !uarte0_ns_enable;
-//!     !uarte0_ns_psel_rts; !uarte0_ns_psel_txd; !uarte0_ns_psel_cts; !uarte0_ns_psel_rxd;
-//!     !uarte0_ns_baudrate; !uarte0_ns_rxd_ptr; !uarte0_ns_rxd_maxcnt; !uarte0_ns_rxd_amount;
-//!     !uarte0_ns_txd_ptr; !uarte0_ns_txd_maxcnt; !uarte0_ns_txd_amount; !uarte0_ns_config;
+//!     index => pub Regs;
+//!     exclude => {
+//!         uarte0_ns_tasks_startrx, uarte0_ns_tasks_stoprx, uarte0_ns_tasks_starttx,
+//!         uarte0_ns_tasks_stoptx, uarte0_ns_tasks_flushrx,
+//!         uarte0_ns_subscribe_startrx, uarte0_ns_subscribe_stoprx,
+//!         uarte0_ns_subscribe_starttx, uarte0_ns_subscribe_stoptx,
+//!         uarte0_ns_subscribe_flushrx, uarte0_ns_events_cts, uarte0_ns_events_ncts,
+//!         uarte0_ns_events_rxdrdy, uarte0_ns_events_endrx, uarte0_ns_events_txdrdy,
+//!         uarte0_ns_events_endtx, uarte0_ns_events_error, uarte0_ns_events_rxto,
+//!         uarte0_ns_events_rxstarted, uarte0_ns_events_txstarted,
+//!         uarte0_ns_events_txstopped, uarte0_ns_publish_cts, uarte0_ns_publish_ncts,
+//!         uarte0_ns_publish_rxdrdy, uarte0_ns_publish_endrx, uarte0_ns_publish_txdrdy,
+//!         uarte0_ns_publish_endtx, uarte0_ns_publish_error, uarte0_ns_publish_rxto,
+//!         uarte0_ns_publish_rxstarted, uarte0_ns_publish_txstarted,
+//!         uarte0_ns_publish_txstopped, uarte0_ns_shorts, uarte0_ns_inten,
+//!         uarte0_ns_intenset, uarte0_ns_intenclr, uarte0_ns_errorsrc,
+//!         uarte0_ns_enable, uarte0_ns_psel_rts, uarte0_ns_psel_txd,
+//!         uarte0_ns_psel_cts, uarte0_ns_psel_rxd, uarte0_ns_baudrate,
+//!         uarte0_ns_rxd_ptr, uarte0_ns_rxd_maxcnt, uarte0_ns_rxd_amount,
+//!         uarte0_ns_txd_ptr, uarte0_ns_txd_maxcnt, uarte0_ns_txd_amount,
+//!         uarte0_ns_config
+//!     }
 //! }
 //! # drone_nrf91_dso::set_log! {
 //! #     periph: Uarte0S,
@@ -74,9 +81,11 @@
 //! # [memory]
 //! # flash = { size = \"128K\", origin = 0x08000000 }
 //! # ram = { size = \"20K\", origin = 0x20000000 }
-//! # [heap]
+//! # [heap.main]
 //! # size = \"0\"
 //! # pools = []
+//! # [linker]
+//! # platform = \"arm\"
 //! # [probe]
 //! # gdb-client-command = \"gdb-multiarch\"
 //! # [log.dso]
@@ -86,22 +95,28 @@
 //! # fn main() {}
 //! # use drone_nrf_map::nrf_reg_tokens;
 //! # nrf_reg_tokens! {
-//! #     struct Regs;
-//! #     !uarte0_ns_tasks_startrx; !uarte0_ns_tasks_stoprx; !uarte0_ns_tasks_starttx;
-//! #     !uarte0_ns_tasks_stoptx; !uarte0_ns_tasks_flushrx; !uarte0_ns_subscribe_startrx;
-//! #     !uarte0_ns_subscribe_stoprx; !uarte0_ns_subscribe_starttx; !uarte0_ns_subscribe_stoptx;
-//! #     !uarte0_ns_subscribe_flushrx; !uarte0_ns_events_cts; !uarte0_ns_events_ncts;
-//! #     !uarte0_ns_events_rxdrdy; !uarte0_ns_events_endrx; !uarte0_ns_events_txdrdy;
-//! #     !uarte0_ns_events_endtx; !uarte0_ns_events_error; !uarte0_ns_events_rxto;
-//! #     !uarte0_ns_events_rxstarted; !uarte0_ns_events_txstarted; !uarte0_ns_events_txstopped;
-//! #     !uarte0_ns_publish_cts; !uarte0_ns_publish_ncts; !uarte0_ns_publish_rxdrdy;
-//! #     !uarte0_ns_publish_endrx; !uarte0_ns_publish_txdrdy; !uarte0_ns_publish_endtx;
-//! #     !uarte0_ns_publish_error; !uarte0_ns_publish_rxto; !uarte0_ns_publish_rxstarted;
-//! #     !uarte0_ns_publish_txstarted; !uarte0_ns_publish_txstopped; !uarte0_ns_shorts; !uarte0_ns_inten;
-//! #     !uarte0_ns_intenset; !uarte0_ns_intenclr; !uarte0_ns_errorsrc; !uarte0_ns_enable;
-//! #     !uarte0_ns_psel_rts; !uarte0_ns_psel_txd; !uarte0_ns_psel_cts; !uarte0_ns_psel_rxd;
-//! #     !uarte0_ns_baudrate; !uarte0_ns_rxd_ptr; !uarte0_ns_rxd_maxcnt; !uarte0_ns_rxd_amount;
-//! #     !uarte0_ns_txd_ptr; !uarte0_ns_txd_maxcnt; !uarte0_ns_txd_amount; !uarte0_ns_config;
+//! #     index => pub Regs;
+//! #     exclude => {
+//! #         uarte0_ns_tasks_startrx, uarte0_ns_tasks_stoprx, uarte0_ns_tasks_starttx,
+//! #         uarte0_ns_tasks_stoptx, uarte0_ns_tasks_flushrx,
+//! #         uarte0_ns_subscribe_startrx, uarte0_ns_subscribe_stoprx,
+//! #         uarte0_ns_subscribe_starttx, uarte0_ns_subscribe_stoptx,
+//! #         uarte0_ns_subscribe_flushrx, uarte0_ns_events_cts, uarte0_ns_events_ncts,
+//! #         uarte0_ns_events_rxdrdy, uarte0_ns_events_endrx, uarte0_ns_events_txdrdy,
+//! #         uarte0_ns_events_endtx, uarte0_ns_events_error, uarte0_ns_events_rxto,
+//! #         uarte0_ns_events_rxstarted, uarte0_ns_events_txstarted,
+//! #         uarte0_ns_events_txstopped, uarte0_ns_publish_cts, uarte0_ns_publish_ncts,
+//! #         uarte0_ns_publish_rxdrdy, uarte0_ns_publish_endrx, uarte0_ns_publish_txdrdy,
+//! #         uarte0_ns_publish_endtx, uarte0_ns_publish_error, uarte0_ns_publish_rxto,
+//! #         uarte0_ns_publish_rxstarted, uarte0_ns_publish_txstarted,
+//! #         uarte0_ns_publish_txstopped, uarte0_ns_shorts, uarte0_ns_inten,
+//! #         uarte0_ns_intenset, uarte0_ns_intenclr, uarte0_ns_errorsrc,
+//! #         uarte0_ns_enable, uarte0_ns_psel_rts, uarte0_ns_psel_txd,
+//! #         uarte0_ns_psel_cts, uarte0_ns_psel_rxd, uarte0_ns_baudrate,
+//! #         uarte0_ns_rxd_ptr, uarte0_ns_rxd_maxcnt, uarte0_ns_rxd_amount,
+//! #         uarte0_ns_txd_ptr, uarte0_ns_txd_maxcnt, uarte0_ns_txd_amount,
+//! #         uarte0_ns_config
+//! #     }
 //! # }
 //! drone_nrf91_dso::set_log! {
 //!     periph: Uarte0S, // Peripheral from `drone_nrf_map::periph::uarte`
